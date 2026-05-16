@@ -1,0 +1,284 @@
+:root {
+  --primary: #003f87;
+  --primary-container: #003f87;
+  --on-primary: #ffffff;
+  --surface-container-low: #ecf5fe;
+  --surface-container-lowest: #ffffff;
+  --surface-container-high: #e0e9f2;
+  --surface-variant: #dbe4ed;
+  --background: #f8f9fa;
+  --on-surface: #141d23;
+  --on-surface-variant: #424752;
+  --error: #ba1a1a;
+  --error-container: #ffdad6;
+  --secondary: #006d37;
+}
+
+.control-container {
+  min-height: 100vh;
+  background-color: var(--background);
+  font-family: 'Inter', sans-serif;
+  color: var(--on-surface);
+  padding-bottom: 100px;
+}
+
+.control-main {
+  padding: 80px 20px 32px 20px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.control-header {
+  margin-bottom: 32px;
+}
+
+.control-header h2 {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
+.control-header p {
+  color: var(--on-surface-variant);
+  font-size: 14px;
+}
+
+/* Tabs Navigation */
+.tabs-nav {
+  display: flex;
+  background-color: var(--surface-container-low);
+  padding: 4px;
+  border-radius: 12px;
+  margin-bottom: 32px;
+  gap: 4px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  color: var(--on-surface-variant);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tab-btn.active {
+  background-color: var(--primary-container);
+  color: var(--on-primary);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.tab-btn:hover:not(.active) {
+  background-color: var(--surface-container-high);
+}
+
+/* Appointment Cards */
+.citas-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.appointment-article {
+  background-color: var(--surface-container-lowest);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05);
+  border-left: 4px solid var(--primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.doctor-info-flex {
+  display: flex;
+  gap: 16px;
+}
+
+.doctor-avatar-img {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  object-fit: cover;
+  background-color: #f1f5f9;
+}
+
+.doctor-text-info h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--on-surface);
+}
+
+.doctor-text-info p {
+  font-size: 14px;
+  color: var(--on-surface-variant);
+}
+
+.status-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 99px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-badge.confirmada { background-color: #27ae60; color: #ffffff; }
+.status-badge.activa { background-color: #27ae60; color: #ffffff; }
+.status-badge.pendiente { background-color: var(--surface-variant); color: var(--on-surface-variant); }
+.status-badge.cancelada { background-color: var(--error-container); color: var(--error); }
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 16px 0;
+  border-top: 1px solid var(--surface-variant);
+  border-bottom: 1px solid var(--surface-variant);
+  margin-bottom: 16px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.detail-item .material-symbols-outlined {
+  color: var(--primary);
+}
+
+.card-actions-flex {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-repro {
+  flex: 1;
+  background-color: var(--surface-container-low);
+  color: var(--primary);
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-repro:hover {
+  background-color: var(--surface-variant);
+}
+
+.btn-cancel {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--error);
+  color: var(--error);
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+  background-color: var(--error-container);
+}
+
+.btn-cancel:active {
+  transform: scale(0.95);
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background-color: rgba(20, 29, 35, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-content {
+  background-color: var(--surface-container-lowest);
+  width: 100%;
+  max-width: 400px;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.warning-icon {
+  width: 64px;
+  height: 64px;
+  background-color: var(--error-container);
+  color: var(--error);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px auto;
+}
+
+.modal-content h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.modal-content p {
+  font-size: 14px;
+  color: var(--on-surface-variant);
+  margin-bottom: 24px;
+}
+
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btn-confirm-cancel {
+  width: 100%;
+  background-color: var(--error);
+  color: #ffffff;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-keep-cita {
+  width: 100%;
+  background-color: var(--surface-container-low);
+  color: var(--on-surface-variant);
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}

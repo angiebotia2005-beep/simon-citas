@@ -1,0 +1,362 @@
+.dashboard-container {
+  min-height: 100vh;
+  background-color: #f6faff;
+  font-family: 'Inter', sans-serif;
+  padding-bottom: 80px;
+}
+
+.dashboard-header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #c2c6d4;
+  height: 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.dashboard-header h1 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #003f87;
+}
+
+.dashboard-main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+.welcome-section {
+  margin-bottom: 24px;
+}
+
+.welcome-section p {
+  font-size: 12px;
+  font-weight: 600;
+  color: #727784;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.welcome-section h2 {
+  font-size: 30px;
+  font-weight: 700;
+  color: #003f87;
+}
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (min-width: 768px) {
+  .bento-grid {
+    grid-template-columns: 2fr 1fr;
+  }
+  .stats-card.full-width {
+    grid-column: span 2;
+  }
+}
+
+.stats-card {
+  background-color: #ffffff;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e9f2;
+}
+
+.stats-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.stats-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #141d23;
+}
+
+.stats-date {
+  font-size: 14px;
+  font-weight: 600;
+  color: #003f87;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.stat-item {
+  padding: 16px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.stat-item.stat-activas {
+  background-color: #f0f7ff;
+  border: 1px solid #d0e4ff;
+  color: #003f87;
+}
+.stat-item.stat-pasadas {
+  background-color: #f0fdf4;
+  border: 1px solid #dcfce7;
+  color: #166534;
+}
+.stat-item.stat-todas {
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  color: #991b1b;
+}
+
+.stat-item .stat-value { color: inherit; }
+.stat-item .stat-label { color: inherit; opacity: 0.8; }
+
+.stat-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.action-btn {
+  background-color: #003f87;
+  color: #ffffff;
+  padding: 24px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0px 4px 12px rgba(0, 86, 179, 0.2);
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.action-btn span:first-child {
+  font-size: 48px;
+}
+
+.action-btn .btn-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.action-btn .btn-desc {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 768px) {
+  .content-grid {
+    grid-template-columns: 2fr 1fr;
+  }
+  .appointments-column.full-width {
+    grid-column: span 2;
+  }
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.section-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #141d23;
+}
+
+.view-all {
+  color: #003f87;
+  font-weight: 600;
+  font-size: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.appointment-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  margin-bottom: 12px;
+  overflow: hidden;
+  border: 1px solid #f1f5f9;
+  position: relative;
+}
+
+.card-accent {
+  width: 6px;
+  background-color: #003f87;
+}
+
+.card-body {
+  padding: 16px;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 16px;
+}
+
+.patient-img {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.patient-info {
+  flex: 1;
+}
+
+.patient-info h4 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #141d23;
+}
+
+.appointment-type {
+  font-size: 14px;
+  color: #424752;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.appointment-time-info {
+  text-align: right;
+}
+
+.time-text {
+  display: block;
+  font-size: 20px;
+  font-weight: 600;
+  color: #003f87;
+}
+
+.status-tag {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 99px;
+  text-transform: uppercase;
+  background-color: #e2e8f0;
+  color: #475569;
+}
+
+.status-tag.confirmada {
+  background-color: #27ae60;
+  color: #ffffff;
+}
+
+.sidebar-card {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
+  margin-bottom: 24px;
+}
+
+.sidebar-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.sidebar-btn {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.sidebar-btn:hover {
+  background-color: #f8fafc;
+}
+
+.sidebar-btn .flex-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebar-btn .material-symbols-outlined {
+  color: #003f87;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 72px;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-top: 1px solid #f1f5f9;
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.nav-item.active {
+  background-color: #ebf2fa;
+  color: #003f87;
+  padding: 8px 16px;
+  border-radius: 12px;
+}
+
+.nav-item span:last-child {
+  font-size: 10px;
+  font-weight: 600;
+  margin-top: 4px;
+}
