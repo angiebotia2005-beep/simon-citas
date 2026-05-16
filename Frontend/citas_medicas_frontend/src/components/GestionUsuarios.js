@@ -8,6 +8,9 @@ export default function GestionUsuarios({ usuario, onLogout }) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   
+  // Estado para las pestañas (Usuarios / Especialidades)
+  const [activeTab, setActiveTab] = useState('usuarios');
+
   // Estado para el modal de asignación de especialidad
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -40,6 +43,10 @@ export default function GestionUsuarios({ usuario, onLogout }) {
     horaInicio: '08:00',
     horaFin: '12:00'
   });
+  const [newEmailError, setNewEmailError] = useState('');
+  const [editEmailError, setEditEmailError] = useState('');
+
+  const validarEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const fetchUsuarios = async () => {
     try {
@@ -332,6 +339,22 @@ export default function GestionUsuarios({ usuario, onLogout }) {
           </div>
         </section>
 
+        <div className="admin-tabs" style={{display: 'flex', gap: '1rem', marginBottom: '1rem', padding: '0 20px'}}>
+          <button 
+            onClick={() => setActiveTab('usuarios')}
+            style={{padding: '10px 20px', border: 'none', background: activeTab === 'usuarios' ? '#0369a1' : '#e2e8f0', color: activeTab === 'usuarios' ? 'white' : '#475569', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', transition: 'background 0.3s'}}
+          >
+            Gestión de Usuarios
+          </button>
+          <button 
+            onClick={() => setActiveTab('especialidades')}
+            style={{padding: '10px 20px', border: 'none', background: activeTab === 'especialidades' ? '#0369a1' : '#e2e8f0', color: activeTab === 'especialidades' ? 'white' : '#475569', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', transition: 'background 0.3s'}}
+          >
+            Lista de Especialidades
+          </button>
+        </div>
+
+        {activeTab === 'usuarios' && (
         <div className="admin-table-container">
           <div className="table-header-actions">
             <h2>Gestión de Usuarios</h2>
@@ -342,10 +365,6 @@ export default function GestionUsuarios({ usuario, onLogout }) {
                 <span className="material-symbols-outlined">person_add</span>
                 Nuevo Especialista
               </button>
-              <button className="add-esp-btn" onClick={() => setShowEspModal(true)}>
-                <span className="material-symbols-outlined">add_circle</span>
-                Añadir Especialidad
-              </button>
             </div>
           </div>
           
@@ -353,6 +372,7 @@ export default function GestionUsuarios({ usuario, onLogout }) {
             <thead>
               <tr>
                 <th>Documento</th>
+                <th>Nombre y Apellido</th>
                 <th>Rol Actual</th>
                 <th>Estado</th>
                 <th>Fecha Creación</th>
@@ -368,6 +388,7 @@ export default function GestionUsuarios({ usuario, onLogout }) {
                       {u.documento}
                     </div>
                   </td>
+                  <td>{u.nombre ? u.nombre + ' ' + u.apellido : ''}</td>
                   <td>
                     <span className={`role-badge ${u.rol}`}>
                       {u.rol}
@@ -400,6 +421,49 @@ export default function GestionUsuarios({ usuario, onLogout }) {
             </tbody>
           </table>
         </div>
+        )}
+
+        {activeTab === 'especialidades' && (
+        <div className="admin-table-container">
+          <div className="table-header-actions">
+            <h2>Especialidades Médicas</h2>
+            <div className="header-buttons">
+              <button className="add-esp-btn" onClick={() => setShowEspModal(true)}>
+                <span className="material-symbols-outlined">add_circle</span>
+                Añadir Especialidad
+              </button>
+            </div>
+          </div>
+          <table className="users-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+              </tr>
+            </thead>
+            <tbody>
+              {especialidades.map(esp => (
+                <tr key={esp.idEspecialidad}>
+                  <td>
+                    <div className="user-doc-cell" style={{fontWeight: 'bold'}}>
+                      <span className="material-symbols-outlined" style={{color: '#0369a1'}}>medical_services</span>
+                      #{esp.idEspecialidad}
+                    </div>
+                  </td>
+                  <td><strong>{esp.nombre}</strong></td>
+                  <td>{esp.descripcion || <span style={{color: '#94a3b8', fontStyle: 'italic'}}>Sin descripción</span>}</td>
+                </tr>
+              ))}
+              {especialidades.length === 0 && (
+                <tr>
+                  <td colSpan="3" style={{textAlign: 'center', padding: '2rem', color: '#64748b'}}>No hay especialidades registradas.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        )}
       </main>
 
       {/* Modal para Especialidad */}
@@ -484,11 +548,12 @@ export default function GestionUsuarios({ usuario, onLogout }) {
                   required
                   value={newEspForm.documento}
                   onChange={(e) => {
-                    const value = e.target.value.replace(/[^0-9]/g, '');
+                    const value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
                     setNewEspForm({...newEspForm, documento: value});
                   }}
                   className="modal-input"
                   placeholder="Solo números"
+                  maxLength={10}
                 />
               </div>
               <div className="modal-form-group">
@@ -517,9 +582,15 @@ export default function GestionUsuarios({ usuario, onLogout }) {
                   type="email" 
                   required
                   value={newEspForm.email}
-                  onChange={(e) => setNewEspForm({...newEspForm, email: e.target.value})}
-                  className="modal-input"
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setNewEspForm({...newEspForm, email: val});
+                    setNewEmailError(val && !validarEmail(val) ? 'Ingresa un correo electrónico válido (ej. usuario@dominio.com)' : '');
+                  }}
+                  className={`modal-input ${newEmailError ? 'input-error' : ''}`}
+                  placeholder="usuario@dominio.com"
                 />
+                {newEmailError && <span style={{color:'#dc2626', fontSize:'0.78rem', marginTop:'4px', display:'block'}}>{newEmailError}</span>}
               </div>
               <div className="modal-form-group">
                 <label>Teléfono</label>
@@ -528,11 +599,12 @@ export default function GestionUsuarios({ usuario, onLogout }) {
                   required
                   value={newEspForm.telefono}
                   onChange={(e) => {
-                    const value = e.target.value.replace(/[^0-9]/g, '');
+                    const value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
                     setNewEspForm({...newEspForm, telefono: value});
                   }}
                   className="modal-input"
                   placeholder="Solo números"
+                  maxLength={10}
                 />
               </div>
               <div className="modal-form-group">
@@ -583,23 +655,25 @@ export default function GestionUsuarios({ usuario, onLogout }) {
                     </label>
                   ))}
                 </div>
-                <div className="time-range-group" style={{display: 'flex', gap: '1rem', marginTop: '1rem'}}>
-                  <div style={{flex: 1}}>
-                    <label style={{fontSize: '0.8rem', color: '#64748b'}}>Hora Inicio</label>
+                <div className="time-range-group" style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginTop: '1.5rem', padding: '1.2rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0'}}>
+                  <div>
+                    <label style={{fontSize: '0.85rem', color: '#64748b', fontWeight: '600', display: 'block', marginBottom: '8px'}}>Hora Inicio</label>
                     <input 
                       type="time" 
                       value={newEspForm.horaInicio}
                       onChange={(e) => setNewEspForm({...newEspForm, horaInicio: e.target.value})}
                       className="modal-input"
+                      style={{width: '100%'}}
                     />
                   </div>
-                  <div style={{flex: 1}}>
-                    <label style={{fontSize: '0.8rem', color: '#64748b'}}>Hora Fin</label>
+                  <div>
+                    <label style={{fontSize: '0.85rem', color: '#64748b', fontWeight: '600', display: 'block', marginBottom: '8px'}}>Hora Fin</label>
                     <input 
                       type="time" 
                       value={newEspForm.horaFin}
                       onChange={(e) => setNewEspForm({...newEspForm, horaFin: e.target.value})}
                       className="modal-input"
+                      style={{width: '100%'}}
                     />
                   </div>
                 </div>
@@ -645,9 +719,15 @@ export default function GestionUsuarios({ usuario, onLogout }) {
                   type="email" 
                   required
                   value={editEspForm.email}
-                  onChange={(e) => setEditEspForm({...editEspForm, email: e.target.value})}
-                  className="modal-input"
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setEditEspForm({...editEspForm, email: val});
+                    setEditEmailError(val && !validarEmail(val) ? 'Ingresa un correo electrónico válido (ej. usuario@dominio.com)' : '');
+                  }}
+                  className={`modal-input ${editEmailError ? 'input-error' : ''}`}
+                  placeholder="usuario@dominio.com"
                 />
+                {editEmailError && <span style={{color:'#dc2626', fontSize:'0.78rem', marginTop:'4px', display:'block'}}>{editEmailError}</span>}
               </div>
               <div className="modal-form-group">
                 <label>Teléfono</label>
@@ -700,23 +780,25 @@ export default function GestionUsuarios({ usuario, onLogout }) {
                     </label>
                   ))}
                 </div>
-                <div className="time-range-group" style={{display: 'flex', gap: '1rem', marginTop: '1rem'}}>
-                  <div style={{flex: 1}}>
-                    <label style={{fontSize: '0.8rem', color: '#64748b'}}>Hora Inicio</label>
+                <div className="time-range-group" style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginTop: '1.5rem', padding: '1.2rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0'}}>
+                  <div>
+                    <label style={{fontSize: '0.85rem', color: '#64748b', fontWeight: '600', display: 'block', marginBottom: '8px'}}>Hora Inicio</label>
                     <input 
                       type="time" 
                       value={editEspForm.horaInicio}
                       onChange={(e) => setEditEspForm({...editEspForm, horaInicio: e.target.value})}
                       className="modal-input"
+                      style={{width: '100%'}}
                     />
                   </div>
-                  <div style={{flex: 1}}>
-                    <label style={{fontSize: '0.8rem', color: '#64748b'}}>Hora Fin</label>
+                  <div>
+                    <label style={{fontSize: '0.85rem', color: '#64748b', fontWeight: '600', display: 'block', marginBottom: '8px'}}>Hora Fin</label>
                     <input 
                       type="time" 
                       value={editEspForm.horaFin}
                       onChange={(e) => setEditEspForm({...editEspForm, horaFin: e.target.value})}
                       className="modal-input"
+                      style={{width: '100%'}}
                     />
                   </div>
                 </div>

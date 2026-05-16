@@ -15,13 +15,14 @@ export default function RegistroUsuario({ onNavigate }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
     
-    // Solo permitir números en documento y teléfono
+    // Solo permitir números en documento y teléfono, máximo 10 dígitos
     if (id === 'documento' || id === 'telefono') {
-      const cleanValue = value.replace(/[^0-9]/g, '');
+      const cleanValue = value.replace(/[^0-9]/g, '').slice(0, 10);
       setFormData({ ...formData, [id]: cleanValue });
     } else {
       setFormData({ ...formData, [id]: value });
@@ -122,14 +123,16 @@ export default function RegistroUsuario({ onNavigate }) {
               <label htmlFor="documento">Documento de Identidad</label>
               <input 
                 type="text" id="documento" placeholder="12345678" 
-                required value={formData.documento} onChange={handleChange} 
+                required value={formData.documento} onChange={handleChange}
+                maxLength={10}
               />
             </div>
             <div className="form-group">
               <label htmlFor="telefono">Teléfono</label>
               <input 
                 type="tel" id="telefono" placeholder="300 000 0000" 
-                required value={formData.telefono} onChange={handleChange} 
+                required value={formData.telefono} onChange={handleChange}
+                maxLength={10}
               />
             </div>
           </div>
@@ -154,10 +157,16 @@ export default function RegistroUsuario({ onNavigate }) {
             <label htmlFor="password">Contraseña</label>
             <div className="password-input-wrapper">
               <input 
-                type="password" id="password" placeholder="••••••••" 
+                type={showPassword ? 'text' : 'password'} id="password" placeholder="••••••••" 
                 required value={formData.password} onChange={handleChange} 
               />
-              <span className="material-symbols-outlined pass-icon">visibility</span>
+              <span 
+                className="material-symbols-outlined pass-icon" 
+                onClick={() => setShowPassword(prev => !prev)}
+                style={{ cursor: 'pointer' }}
+              >
+                {showPassword ? 'visibility_off' : 'visibility'}
+              </span>
             </div>
           </div>
 

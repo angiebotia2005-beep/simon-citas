@@ -6,10 +6,23 @@ export default function ConsultaAgendas({ usuario, especialista, onNavigate }) {
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [viewDate, setViewDate] = useState(new Date());
+  const [horarios, setHorarios] = useState([]);
+  const [diasDisponibles, setDiasDisponibles] = useState([]);
 
+  // Cargar horarios del especialista y extraer días de la semana disponibles
   useEffect(() => {
     if (especialista) {
+      // Cargar citas
       cargarCitas();
+      // Cargar horarios para habilitar días
+      fetch(`http://localhost:8080/api/horario/especialista/${especialista.idEspecialista}`)
+        .then(r => r.json())
+        .then(data => {
+          setHorarios(data);
+          const dias = [...new Set(data.map(h => h.diaSemana))];
+          setDiasDisponibles(dias);
+        })
+        .catch(console.error);
     }
   }, [especialista]);
 
@@ -30,20 +43,23 @@ export default function ConsultaAgendas({ usuario, especialista, onNavigate }) {
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
-    const firstDay = new Date(year, month, 1).getDay();
+    const firstDay = new Date(year, month, 1).getDay(); // 0=Sun
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const prevDaysInMonth = new Date(year, month, 0).getDate();
-    
-    const startingDay = firstDay === 0 ? 6 : firstDay - 1;
+
+    const startingDay = firstDay === 0 ? 6 : firstDay - 1; // convert to 0=Mon
     const days = [];
 
-    // Días del mes anterior
+    // previous month (disabled)
     for (let i = startingDay - 1; i >= 0; i--) {
-      days.push({ day: prevDaysInMonth - i, current: false });
+      days.push({ day: prevDaysInMonth - i, current: false, enabled: false });
     }
-    // Días del mes actual
+    // current month
     for (let i = 1; i <= daysInMonth; i++) {
-      days.push({ day: i, current: true });
+      const dateObj = new Date(year, month, i);
+      const dayOfWeek = dateObj.getDay() === 0 ? 7 : dateObj.getDay(); // 1=Mon ..7=Sun
+      const enabled = diasDisponibles.includes(dayOfWeek);
+      days.push({ day: i, current: true, enabled });
     }
     return days;
   };
@@ -107,8 +123,9 @@ export default function ConsultaAgendas({ usuario, especialista, onNavigate }) {
               return (
                 <button 
                   key={i} 
-                  className={`calendar-day ${!d.current ? 'other-month' : ''} ${isSelected ? 'selected' : ''}`}
-                  onClick={() => d.current && setSelectedDate(dateStr)}
+                  className={`calendar-day ${!d.current ? 'other-month' : ''} ${isSelected ? 'selected' : ''} ${!d.enabled ? 'disabled' : ''}`}
+                  disabled={!d.enabled || !d.current}
+                  onClick={() => d.current && d.enabled && setSelectedDate(dateStr)}
                 >
                   {d.day}
                   {isSelected && <span className="day-dot"></span>}

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import './AsignacionCita.css';
 
 export default function AsignacionCita({ onNavigate, onLogout, usuario, paciente: loggedPaciente }) {
@@ -21,6 +23,7 @@ export default function AsignacionCita({ onNavigate, onLogout, usuario, paciente
 
   const [horasDisponibles, setHorasDisponibles] = useState([]);
   const [loadingHoras, setLoadingHoras] = useState(false);
+  const [diasDisponibles, setDiasDisponibles] = useState([]);
 
   useEffect(() => {
     if (loggedPaciente) {
@@ -37,6 +40,21 @@ export default function AsignacionCita({ onNavigate, onLogout, usuario, paciente
   }, [loggedPaciente]);
 
   useEffect(() => {
+    if (idEspecialista) {
+      fetch(`http://localhost:8080/api/horario/especialista/${idEspecialista}`)
+        .then(res => res.json())
+        .then(data => {
+           const dias = [...new Set(data.map(h => h.diaSemana))];
+           setDiasDisponibles(dias);
+        })
+        .catch(console.error);
+    } else {
+      setDiasDisponibles([]);
+      setFecha(''); // Resetear fecha si cambia o se quita especialista
+    }
+  }, [idEspecialista]);
+
+  useEffect(() => {
     if (idEspecialista && fecha) {
       setLoadingHoras(true);
       setHora(''); // Reset hour when specialist or date changes
@@ -47,8 +65,16 @@ export default function AsignacionCita({ onNavigate, onLogout, usuario, paciente
         })
         .catch(err => console.error("Error fetching availability:", err))
         .finally(() => setLoadingHoras(false));
+    } else {
+      setHorasDisponibles([]);
     }
   }, [idEspecialista, fecha]);
+
+  const isDayEnabled = (date) => {
+    if (!idEspecialista || diasDisponibles.length === 0) return false;
+    const day = date.getDay() === 0 ? 7 : date.getDay(); // 1=Lunes ... 7=Domingo
+    return diasDisponibles.includes(day);
+  };
 
   const buscarPaciente = async () => {
     if (!pacienteIdBusqueda) return;
@@ -217,12 +243,21 @@ export default function AsignacionCita({ onNavigate, onLogout, usuario, paciente
             <div className="grid-form">
               <div className="input-with-label">
                 <label className="sub-label">Fecha</label>
-                <input 
-                  type="date" 
+                <DatePicker 
+                  selected={fecha ? new Date(fecha + 'T00:00:00') : null}
+                  onChange={(date) => {
+                    if (date) {
+                      setFecha(date.toISOString().split('T')[0]);
+                    } else {
+                      setFecha('');
+                    }
+                  }}
+                  minDate={new Date()}
+                  filterDate={isDayEnabled}
                   className="date-input" 
-                  value={fecha}
-                  onChange={(e) => setFecha(e.target.value)}
-                  min={new Date().toISOString().split('T')[0]}
+                  placeholderText="Seleccione una fecha"
+                  dateFormat="dd/MM/yyyy"
+                  disabled={!idEspecialista}
                 />
               </div>
             </div>

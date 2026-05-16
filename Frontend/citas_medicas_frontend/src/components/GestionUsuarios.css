@@ -432,6 +432,7 @@
   border-radius: 8px;
   font-size: 0.95rem;
   transition: all 0.2s;
+  box-sizing: border-box;
 }
 
 .modal-input:focus, .modal-textarea:focus {
@@ -443,4 +444,9 @@
 .modal-textarea {
   min-height: 100px;
   resize: vertical;
+}
+
+.input-error {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
 }

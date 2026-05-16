@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.citasmedicas.demo.dto.UsuarioDTO;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -34,9 +36,28 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Usuario>> obtenerUsuarios() {
+    public ResponseEntity<List<UsuarioDTO>> obtenerUsuarios() {
         List<Usuario> usuarios = usuarioRepository.findAll();
-        return new ResponseEntity<>(usuarios, HttpStatus.OK);
+        List<UsuarioDTO> dtoList = new ArrayList<>();
+        for (Usuario u : usuarios) {
+            UsuarioDTO dto = new UsuarioDTO();
+            dto.setDocumento(u.getDocumento());
+            dto.setRol(u.getRol());
+            dto.setActivo(u.getActivo());
+            dto.setFechaCreacion(u.getFechaCreacion());
+            // intentar obtener nombre y apellido del paciente si existe
+            pacienteRepository.findByDocumento(u.getDocumento()).ifPresent(p -> {
+                dto.setNombre(p.getNombre());
+                dto.setApellido(p.getApellido());
+            });
+            // si el usuario es especialista, obtener datos del especialista
+            especialistaRepository.findByDocumento(u.getDocumento()).ifPresent(e -> {
+                dto.setNombre(e.getNombre());
+                dto.setApellido(e.getApellido());
+            });
+            dtoList.add(dto);
+        }
+        return new ResponseEntity<>(dtoList, HttpStatus.OK);
     }
 
     @GetMapping("/{documento}")
