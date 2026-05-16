@@ -1,0 +1,27 @@
+info:
+  name: Crear Paciente
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: http://localhost:8080/api/paciente
+  body:
+    type: json
+    data: |
+      {
+        "nombre": "Laura",
+        "apellido": "Pérez",
+        "documento": "1020304050",
+        "telefono": "555-1234",
+        "email": "laura.perez@example.com",
+        "fechaNacimiento": "1990-05-15",
+        "direccion": "Calle Falsa 123, Ciudad"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

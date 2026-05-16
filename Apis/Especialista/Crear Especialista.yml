@@ -1,0 +1,28 @@
+info:
+  name: Crear Especialista
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: http://localhost:8080/api/especialista
+  body:
+    type: json
+    data: |-
+      {
+        "nombre": "Carlos",
+        "apellido": "Gómez",
+        "documento": "998654563",
+        "telefono": "3001234567",
+        "email": "carlos.gomez@ejemplo.com",
+        "especialidad": {
+          "idEspecialidad": 1
+        }
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

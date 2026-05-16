@@ -1,0 +1,15 @@
+info:
+  name: Cancelar Cita
+  type: http
+  seq: 5
+
+http:
+  method: PUT
+  url: http://localhost:8080/api/citas/cancelar/6
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

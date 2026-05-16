@@ -14,17 +14,31 @@ function App() {
   const [paciente, setPaciente] = useState(null);
   const [currentView, setCurrentView] = useState('dashboard');
 
-  // Recuperar sesión al cargar la app
+  const SESSION_DURATION_MS = 10 * 60 * 1000; // 10 minutos en milisegundos
+
+  // Recuperar sesión al cargar la app (con expiración de 10 min)
   useEffect(() => {
     const savedUsuario = localStorage.getItem('usuario');
     const savedPaciente = localStorage.getItem('paciente');
     const savedView = localStorage.getItem('currentView');
+    const savedLoginTime = localStorage.getItem('loginTime');
 
-    if (savedUsuario && savedPaciente) {
-      setUsuario(JSON.parse(savedUsuario));
-      setPaciente(JSON.parse(savedPaciente));
-      setIsLoggedIn(true);
-      if (savedView) setCurrentView(savedView);
+    if (savedUsuario && savedPaciente && savedLoginTime) {
+      const elapsed = Date.now() - parseInt(savedLoginTime, 10);
+
+      if (elapsed < SESSION_DURATION_MS) {
+        // Sesión aún válida
+        setUsuario(JSON.parse(savedUsuario));
+        setPaciente(JSON.parse(savedPaciente));
+        setIsLoggedIn(true);
+        if (savedView) setCurrentView(savedView);
+      } else {
+        // Sesión expirada → limpiar y mostrar Login
+        localStorage.removeItem('usuario');
+        localStorage.removeItem('paciente');
+        localStorage.removeItem('currentView');
+        localStorage.removeItem('loginTime');
+      }
     }
   }, []);
 
@@ -66,10 +80,11 @@ function App() {
         setIsLoggedIn(true);
         setCurrentView(targetView);
         
-        // Guardar en localStorage
+        // Guardar en localStorage con timestamp de login
         localStorage.setItem('usuario', JSON.stringify(userData));
         localStorage.setItem('paciente', JSON.stringify(profileData));
         localStorage.setItem('currentView', targetView);
+        localStorage.setItem('loginTime', Date.now().toString());
       }
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -80,6 +95,7 @@ function App() {
     localStorage.removeItem('usuario');
     localStorage.removeItem('paciente');
     localStorage.removeItem('currentView');
+    localStorage.removeItem('loginTime');
     setIsLoggedIn(false);
     setUsuario(null);
     setPaciente(null);

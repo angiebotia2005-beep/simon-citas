@@ -1,0 +1,32 @@
+info:
+  name: Crear Cita
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: http://localhost:8080/api/citas
+  body:
+    type: json
+    data: |-
+      {
+        "paciente": {
+          "idPaciente": 1
+        },
+        "especialista": {
+          "idEspecialista": 4
+        },
+        "fecha": "2026-06-15",
+        "horaInicio": "09:30:00",
+        "horaFin": "10:00:00",
+        "motivo": "Chequeo general anual",
+        "observaciones": "El paciente solicita revisión de exámenes anteriores",
+        "estado": "activa"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,28 @@
+info:
+  name: Actualizar Especialista
+  type: http
+  seq: 3
+
+http:
+  method: PUT
+  url: http://localhost:8080/api/especialista/1
+  body:
+    type: json
+    data: |-
+      {
+        "nombre": "Juan",
+        "apellido": "Gómez",
+        "documento": "102938456",
+        "telefono": "3001234567",
+        "email": "carlos.gomez@ejemplo.com",
+        "especialidad": {
+          "idEspecialidad": 1
+        }
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

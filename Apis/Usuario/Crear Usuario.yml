@@ -1,0 +1,24 @@
+info:
+  name: Crear Usuario
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: http://localhost:8080/api/usuario
+  body:
+    type: json
+    data: |
+      {
+          "documento": "7070707070",
+          "contrasena": "claveSegura123",
+          "rol": "especialista",
+          "activo": true
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
